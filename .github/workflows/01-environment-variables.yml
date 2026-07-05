@@ -1,0 +1,33 @@
+name: 01 Environment Variables
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  COURSE_NAME: "GitHub Actions Hausaufgabe"
+  ENVIRONMENT_NAME: "Homework"
+
+jobs:
+  env-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository herunterladen
+        uses: actions/checkout@v4
+
+      - name: Shell Skripte ausführbar machen
+        run: chmod +x scripts/*.sh
+
+      - name: Env Report erstellen
+        env:
+          STEP_MESSAGE: "Diese Variable gilt nur in diesem Step"
+        run: bash scripts/01_env_report.sh
+
+      - name: Env Report hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: env-report
+          path: output/env-report.txt
