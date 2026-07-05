@@ -1,0 +1,33 @@
+name: 02 Repository Variables
+
+on:
+  workflow_dispatch:
+
+  push:
+    paths:
+      - ".github/workflows/02-repository-variables.yml"
+      - "scripts/02_variables_report.sh"
+
+jobs:
+  variables-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository herunterladen
+        uses: actions/checkout@v4
+
+      - name: Shell Skripte ausführbar machen
+        run: chmod +x scripts/*.sh
+
+      - name: Repository Variables verwenden
+        env:
+          APP_NAME: ${{ vars.APP_NAME }}
+          TARGET_ENV: ${{ vars.TARGET_ENV }}
+          APP_VERSION: ${{ vars.APP_VERSION }}
+        run: bash scripts/02_variables_report.sh
+
+      - name: Variables Report hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: variables-report
+          path: output/variables-report.txt
